@@ -17,7 +17,7 @@ const rl = readline.createInterface({
 //Log everything
 client.once('ready', () => {
     console.log("Ready!");
-    client.user.setActivity(`for the moment you slip up`, { type: 'WATCHING' })
+    client.user.setActivity(`over tronlings`, { type: 'WATCHING' })
     .catch(console.error);
 
     //Set up the guild in storage
@@ -88,6 +88,7 @@ async function processMsg(message) {
 rl.on('line', (input) => {
 
     if (input === "reload") {
+        console.log("Reloading!");
         fdm.reload();
     }
 
