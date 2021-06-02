@@ -9,8 +9,11 @@
   "author": "glazed_darnut",
   "license": "ISC",
   "dependencies": {
+    "@tensorflow/tfjs": "^3.6.0",
     "discord.js": "^12.5.3",
     "dotenv": "^9.0.2",
-    "tesseract.js": "^2.1.4"
+    "sharp": "^0.28.3",
+    "tesseract.js": "^2.1.4",
+    "waifu2x": "^0.7.4"
   }
 }
