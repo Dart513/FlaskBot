@@ -38,20 +38,21 @@ class Verify {
 
       //We're not expecting very many requests coming in per second, we're only going to have 2 workers.
       let workers = [createWorker({
-        //logger: m => console.log(m)
-      }),
-      createWorker({
-        //logger: m => console.log(m)
+        logger: m => console.log(m)
       })];
+      //createWorker({
+        //logger: m => console.log(m)
+      //})];
 
       // Init the workers and add them to the scheduler.
       await Promise.all(workers.map(async worker => {
-        await worker.load();
-        await worker.loadLanguage('eng');
-        await worker.initialize('eng');
+        console.log(await worker.load(), "done loading");
+        console.log(await worker.loadLanguage('eng'), "done loading language");
+        console.log(await worker.initialize('eng'), "done initializing");
 
         scheduler.addWorker(worker)
       }));
+      
       
       this.scheduler = scheduler;
       this.workers = workers;
@@ -66,18 +67,20 @@ class Verify {
 
       //grab the image
 
-      let id = Math.random();
-      let tempFile = path.join(__dirname, '/data/images/', `${id}.png`);
+      //let id = Math.random();
+      //let tempFile = path.join(__dirname, '/data/images/', `${id}.png`);
+      /*
       await this.sharp(await this._fetchImage(img))
         .sharpen(5, 1.5, 2)
         .resize(2000)
         .toFile(tempFile);
-      
+      */
+
       await this.isInitialized;
-      const { data: { text } } = await this.scheduler.addJob('recognize', tempFile);
+      const { data: { text } } = await this.scheduler.addJob('recognize', img);
       console.log("Text:", text);
 
-      this.fs.unlink(tempFile, () => {});
+      //this.fs.unlink(tempFile, () => {});
       
       return text;
     }
