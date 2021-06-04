@@ -11,9 +11,16 @@
   "dependencies": {
     "@discordjs/opus": "^0.5.0",
     "@tensorflow/tfjs": "^3.6.0",
+    "bufferutil": "^4.0.3",
     "discord.js": "^12.5.3",
     "dotenv": "^9.0.2",
+    "ffmpeg-static": "^4.3.0",
+    "jimp": "^0.16.1",
+    "node-opus": "^0.3.3",
+    "opusscript": "0.0.8",
+    "prism-media": "^1.2.9",
     "sharp": "^0.28.3",
-    "tesseract.js": "^2.1.4"
+    "tesseract.js": "^2.1.4",
+    "utf-8-validate": "^5.0.5"
   }
 }

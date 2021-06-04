@@ -26,23 +26,32 @@ class Verify {
       const { createScheduler } = Tesseract;
       const { createWorker } = Tesseract;
 
-      const scheduler = createScheduler();
+      const scheduler = createScheduler({
+	logger: m => console.log(m)
+      });
 
-      this.https = require('https')                                            
-      this.Stream = require('stream').Transform                                 
+      this.https = require('https');                                            
+      this.Stream = require('stream').Transform;                                
       
       this.sharp = require('sharp');
-
+      this.Jimp = require('jimp');
 
 
 
       //We're not expecting very many requests coming in per second, we're only going to have 2 workers.
       let workers = [createWorker({
         logger: m => console.log(m)
-      })];
+      }),
+      createWorker({
+        logger: m => console.log(m)
+      }),
       //createWorker({
-        //logger: m => console.log(m)
-      //})];
+      //  logger: m => console.log(m)
+      //}),
+      //createWorker({
+      //  logger: m => console.log(m)
+      //})
+    ];
 
       // Init the workers and add them to the scheduler.
       await Promise.all(workers.map(async worker => {
@@ -50,7 +59,7 @@ class Verify {
         console.log(await worker.loadLanguage('eng'), "done loading language");
         console.log(await worker.initialize('eng'), "done initializing");
 
-        scheduler.addWorker(worker)
+        scheduler.addWorker(worker);
       }));
       
       
@@ -67,21 +76,34 @@ class Verify {
 
       //grab the image
 
-      //let id = Math.random();
-      //let tempFile = path.join(__dirname, '/data/images/', `${id}.png`);
-      /*
+
+      let id = Math.random();
+      let tempFile = path.join(__dirname, '/data/images/', `${id}.png`);
+      
       await this.sharp(await this._fetchImage(img))
         .sharpen(5, 1.5, 2)
         .resize(2000)
         .toFile(tempFile);
-      */
-
-      await this.isInitialized;
-      const { data: { text } } = await this.scheduler.addJob('recognize', img);
-      console.log("Text:", text);
-
-      //this.fs.unlink(tempFile, () => {});
       
+      await this.isInitialized;
+      console.log("New recognize job!");
+
+      let responses = await Promise.all(
+        (await this._sliceImage(tempFile, 250)).map(
+
+          async (element) => {
+            element = path.join(__dirname, '/data/images/', `${element}.png`);
+            const { data: {text} } = await this.scheduler.addJob('recognize', element);
+            this.fs.unlink(element, () => {});
+            return text;
+          }
+      ));
+
+      this.fs.unlink(tempFile, () => {});
+      
+      let text = responses.join(' ');
+
+      console.log(text);
       return text;
     }
 
@@ -106,6 +128,39 @@ class Verify {
           });                                                                         
         }).end();
       });
+    }
+
+    async _sliceImage(url, max) {
+      const image = this.sharp(url);
+      const metadata = await image.metadata();
+
+      let w = metadata.width;
+      let h = metadata.height;
+      let sliceHeight = parseInt(max);
+      console.log("SliceHeight", sliceHeight);
+      let overlap = sliceHeight / 6;
+
+      let slices = [];
+      let promises = [];
+      
+      let iters = h / sliceHeight;
+      for(let i = 0 ; i < iters; i++) {
+        let id = Math.random();
+        let height =  sliceHeight * (i+1) + overlap > h? h - sliceHeight * i: parseInt(sliceHeight + overlap);
+
+        console.log("height", height, 'h', h, sliceHeight * i)
+
+        promises.push(image.extract({
+          left: 0, top: sliceHeight*i, width: w, height: height
+        })
+        .toFile(path.join(__dirname, '/data/images/', `${id}.png`)));
+
+        slices.push(id);
+      }
+
+      await Promise.all(promises);
+
+      return slices;
     }
 
     
@@ -134,6 +189,9 @@ class Verify {
 
 module.exports = Verify; 
 
-//let temp = new Verify();
-
+/*let temp = new Verify();
+temp._sliceImage('./data/images/0.0321310094626055.png',4).then(m => {
+  console.log(m); 
+  temp.close();
+});*/
 //temp.recognize('https://cdn.discordapp.com/attachments/835893922085339166/849748985816285194/unknown.png').then(res => console.log(res)).then(res => temp.close());

@@ -59,6 +59,7 @@ async function processMsg(message) {
     //if (message.channel.name == 'general') console.log("Message");
     if (!message.author.bot) {
 
+
         //DMs
         if (message.channel instanceof Discord.DMChannel) {
             if (message.attachments.size > 0) {
