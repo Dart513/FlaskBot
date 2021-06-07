@@ -3,5 +3,4 @@
 /data/guilds/*
 /data/mongodb/*
 /node_modules
-eng.traineddata
 engBackup.traineddata
