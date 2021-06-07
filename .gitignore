@@ -1,4 +1,7 @@
 *.env
-data/images
-data/images/guilds
-node_modules
+/data/images/*
+/data/guilds/*
+/data/mongodb/*
+/node_modules
+eng.traineddata
+engBackup.traineddata

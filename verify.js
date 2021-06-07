@@ -1,5 +1,8 @@
 /**
- * A singleton class to export. Verifies a user from a screenshot of their quest info. Does not require Tesseract to be re-initialized each time it is run.
+ * Module: verify
+ * Author: Glazed_Darnut
+ * Version: 1.0.0
+ * Description: A singleton class to export. Verifies a user from a screenshot of their quest info. Does not require Tesseract to be re-initialized each time it is run.
  */
 const path = require('path');
 
@@ -19,7 +22,7 @@ class Verify {
     async init() {
       this.fs = require('fs');    
       //Make sure the training data was not corrupted
-      this.fs.copyFileSync('./engBackup.traineddata', './eng.traineddata');
+      await new Promise((resolve, reject) => this.fs.copyFile('./engBackup.traineddata', './eng.traineddata', resolve));
 
       const Tesseract = require('tesseract.js');
 
@@ -27,16 +30,13 @@ class Verify {
       const { createWorker } = Tesseract;
 
       const scheduler = createScheduler({
-	logger: m => console.log(m)
+      	logger: m => console.log(m)
       });
 
       this.https = require('https');                                            
       this.Stream = require('stream').Transform;                                
       
       this.sharp = require('sharp');
-      this.Jimp = require('jimp');
-
-
 
       //We're not expecting very many requests coming in per second, we're only going to have 2 workers.
       let workers = [createWorker({
@@ -62,9 +62,33 @@ class Verify {
         scheduler.addWorker(worker);
       }));
       
+      //Make a worker pool for osd.
+
+      let osdWorkers = [
+        createWorker({
+          logger: m=> console.log(m)
+        })
+      ];
+
+
+      let osdScheduler = createScheduler({
+        logger: console.log
+      });
+
+      // Init the workers and add them to the scheduler.
+      await Promise.all(osdWorkers.map(async worker => {
+        console.log(await worker.load(), "done loading");
+        console.log(await worker.loadLanguage('eng'), "done loading language");
+        console.log(await worker.initialize('eng'), "done initializing");
+
+        osdScheduler.addWorker(worker);
+      }));
+
       
       this.scheduler = scheduler;
       this.workers = workers;
+      this.osdWorkers = osdWorkers;
+      this.osdScheduler = osdScheduler;
     }
 
     /**
@@ -75,8 +99,6 @@ class Verify {
     async recognize(img) {
 
       //grab the image
-
-
       let id = Math.random();
       let tempFile = path.join(__dirname, '/data/images/', `${id}.png`);
       
@@ -105,6 +127,10 @@ class Verify {
 
       console.log(text);
       return text;
+    }
+
+    async detect(img) {
+      return await this.osdScheduler.addJob('detect', img);
     }
 
 
@@ -165,15 +191,34 @@ class Verify {
 
     
     /**
-     * Checks if the image matches an intention to matriculate
+     * Checks if the image matches the parameters decided
      * @param {String} img url to image
-     * @param {String} name name of person
+     * @param {String} name text input
+     * @param {Object {
+     *  regex: String
+     *  script: (Optional) String
+     * }} params parameters of the verification
      * @returns true/false
      */
-    async verify(img, name) {
+    async verify(img, name, params) {
+
+      //2 tests are attempted, one optional, one mandatory.
+
+      let scriptMatch = true;
+      if (params.script !== undefined) {
+        scriptMatch = (params.script === (await this.detect(img)).data.script);
+      }
+
       const text = await this.recognize(img);
-      const isVerification = new RegExp(`((?=.*?matriculate.*?)(?=.*?intention.*?)(?=.*?mechatronics.*?)(?=.*?honours.*?)(?=.*?co-op.*?)(?=.*?${name}.*?))`, 'gmsi');
-      return (isVerification.test(text));
+    
+
+      let [regex, flags] = params.regex.split("/");
+      regex = regex.replace("${name}", name);
+
+      const textVerifier = new RegExp(regex, flags);
+      let textMatch = textVerifier.test(text);
+      
+      return (scriptMatch && textMatch);
     }
 
     /**
@@ -181,7 +226,7 @@ class Verify {
      */
     async close() {
         await this.isInitialized;
-        await Promise.all[this.workers.map(async worker => await worker.terminate())];
+        await Promise.all([this.workers.map(async worker => await worker.terminate()), this.osdWorkers.map(async worker => await worker.terminate())]);
 
     }
 

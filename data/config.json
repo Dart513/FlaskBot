@@ -1,0 +1,78 @@
+{
+  "GUILDS": {
+    "218146062030864384": {
+      "name": "TESTER@#",
+      "replacements": []
+    },
+    "826117425387929661": {
+      "name": "UW TRON '26",
+      "replacements": [
+        {
+          "triggers": [
+            "%guide",
+            "%freshmansguide"
+          ],
+          "result": "https://docs.google.com/document/d/1YjnAn3fw3GOPjoAW7FF_VBAR-9jXL0tQlZrPQLc6vMs/edit?usp=sharing",
+          "options": "/gi"
+        },
+        {
+          "triggers": [
+            "%textbooks"
+          ],
+          "result": "Thanks to Carson, Ed & Toast, we have these resources: \nhttps://www.dropbox.com/sh/hkjfiou7r6i7dg1/AABomd-xH35HCd_LMMr5NAjya?dl=0\nhttps://drive.google.com/drive/u/0/folders/0B5-mFNj8fSWgflpDamNXaTJjQ21qakE1VGFvM2pOTGZoMzVoNm1WVkkzM0piUmxzdV9kVTQ\nhttps://mega.nz/folder/hBpDAIZQ#RJTvhURioyhWVCyBfYmiZw",
+          "options": "/g"
+        }
+      ],
+      "verification": {
+        "tron '26": {
+          "regex": "((?=.*?matriculate.*?)(?=.*?intention.*?)(?=.*?mechatronics.*?)(?=.*?honours.*?)(?=.*?co-op.*?)(?=.*?${name}.*?))/gmsi",
+          "script": "Latin"
+        }
+      },
+      "help_messages": {
+        "verification": {
+          "__default": {
+            "embed": {
+              "color": 16744499,
+              "title": "Verification",
+              "fields": [
+                {
+                  "name": "How to verify your identity with this server",
+                  "value": "To get more specific help, send me a message with the following format: `verify \"UW TRON '26\" \"<role>\"`"
+                }
+              ]
+            }
+          },
+          "tron '26": {
+            "embed": {
+              "color": 16744499,
+              "title": "Verification",
+              "fields": [
+                {
+                  "name": "How to verify your identity to become tron '26",
+                  "value": "Send a message with the following format: `verify \"UW TRON '26\" \"tron '26\" \"<first_name> <last_name>\"` and a screenshot of your Quest screen with your full name visible attached to the message. An example of this process be found below."
+                }
+              ],
+              "image": {
+                "url": "https://cdn.discordapp.com/attachments/849731294572970014/851516531044777985/unknown.png"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "GLOBAL": {
+    "commands": {},
+    "replacements": [
+      {
+        "triggers": [
+          "!ericliu"
+        ],
+        "result": "https://www.twitlonger.com/show/n_1srm4bt",
+        "options": "/g"
+      }
+    ],
+    "saved_embeds": {}
+  }
+}
