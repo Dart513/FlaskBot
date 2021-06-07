@@ -42,9 +42,9 @@ class Verify {
       let workers = [createWorker({
         logger: m => console.log(m)
       }),
-      createWorker({
+      /*createWorker({
         logger: m => console.log(m)
-      }),
+      }),*/
       //createWorker({
       //  logger: m => console.log(m)
       //}),
