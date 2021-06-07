@@ -38,7 +38,7 @@
               "fields": [
                 {
                   "name": "How to verify your identity with this server",
-                  "value": "To get more specific help, send me a message with the following format: `verify \"UW TRON '26\" \"<role>\"`"
+                  "value": "To get more specific help, send me a message with the following format: `verify \"UW TRON '26\" \"role\"`"
                 }
               ]
             }
@@ -50,7 +50,7 @@
               "fields": [
                 {
                   "name": "How to verify your identity to become tron '26",
-                  "value": "Send a message with the following format: `verify \"UW TRON '26\" \"tron '26\" \"<first_name> <last_name>\"` and a screenshot of your Quest screen with your full name visible attached to the message. An example of this process be found below."
+                  "value": "Send a message with the following format: `verify \"UW TRON '26\" \"tron '26\" \"first_name last_name\"` and a screenshot of your Quest screen with your full name visible attached to the message. An example of this process be found below."
                 }
               ],
               "image": {
