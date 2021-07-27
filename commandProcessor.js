@@ -51,8 +51,10 @@ module.exports = class commandProcessor {
         let username = message.author.username;
         
         if (!message.author.bot) {
+            
             //DMs
             if (message.channel instanceof Discord.DMChannel) {
+                console.log((new Date).toString(), content);
                 
                 //Do not allow anyone who is already verified to re-verify.
 
@@ -80,7 +82,7 @@ module.exports = class commandProcessor {
                         };
                        
 
-                        console.log("commandargs", commandArgs);
+                        console.log("commandargs", commandArgs, username);
 
                         //Check length
                         let requestedRole, guildId;
@@ -172,7 +174,7 @@ module.exports = class commandProcessor {
                                         });
                                         
                                         console.log(attachment);
-                                        let doContinue = isImage.test(attachment.name);
+                                        let doContinue = isImage.test(attachment.name) || isImage.test(attachment.name);
                                         if (doContinue) {
 
                                             //Tell the user that we're verifying.

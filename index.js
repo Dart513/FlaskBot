@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
-dotenv.config();
+const Path = require('path');
+dotenv.config({path: Path.join(__dirname, '.env')});
 
 const Discord = require('discord.js');
 
@@ -10,7 +11,7 @@ const intents = new Intents([
     "GUILD_MEMBERS", // lets you request guild members 
 ]);
 
-const client = new Discord.Client({ ws: { intents } });
+const client = new Discord.Client({ ws: { intents }, partials: ['USER', 'REACTION', 'MESSAGE']  });
 const fdm = new (require('./flatDataManager'));
 
 const verify = new (require('./verify'));
@@ -58,6 +59,10 @@ client.on('guildCreate', (guild) => {
 
 //TODO: Process commands to slash commands when everything is done.
 client.on('message', commandProcessor.processMsg.bind(commandProcessor));
+
+client.on("messageReactionAdd", function(messageReaction, user){
+    //console.log(messageReaction.emoji);
+});
 
 
 rl.on('line', (input) => {

@@ -25,7 +25,7 @@
       ],
       "verification": {
         "tron '26": {
-          "regex": "((?=.*?matriculate.*?)(?=.*?intention.*?)(?=.*?mechatronics.*?)(?=.*?honours.*?)(?=.*?co-op.*?)(?=.*?${name}.*?))/gmsi",
+          "regex": "((?=.*?(matriculat(e|ion))|enroll.*?)(?=.*?mechatronics.*?)(?=.*?honours.*?)(?=.*?co-op.*?)(?=.*?${name}.*?))/gmsi",
           "script": "Latin"
         }
       },
