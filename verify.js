@@ -209,7 +209,7 @@ class Verify {
         scriptMatch = (params.script === (await this.detect(img)).data.script);
       }
 
-      const text = (await this.recognize(img)).replace("\n", "");
+      const text = (await this.recognize(img)).replace("\n", " ");
     
 
       let [regex, flags] = params.regex.split("/");
